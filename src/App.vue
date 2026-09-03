@@ -2192,8 +2192,10 @@ footer {
 <!-- </style> -->
  
 
+
+
 //Mini E-Commerce
-<script setup>
+<!-- <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 
 const products = ref([
@@ -2456,21 +2458,21 @@ onMounted(() => {
     cart.value = JSON.parse(savedCart)
   }
 })
-</script>
+</script> -->
 
-<template>
-  <div class="app">
+<!-- <template> -->
+  <!-- <div class="app"> -->
 
-    <header class="header">
+    <!-- <header class="header">
       <h1> My Store</h1>
 
       <div class="cart-count">
         Cart: {{ cartCount }}
       </div>
-    </header>
+    </header> -->
 
     <!-- PRODUCTS -->
-    <section class="section">
+    <!-- <section class="section">
       <h2>Product Catalog</h2>
 
       <div class="filters">
@@ -2491,8 +2493,8 @@ onMounted(() => {
           <option value="default">តម្រៀប</option>
           <option value="low-high">Price: Low → High</option>
           <option value="high-low">Price: High → Low</option>
-        </select>
-      </div>
+        </select> -->
+      <!-- </div>
 
       <div class="product-grid">
         <div
@@ -2534,17 +2536,17 @@ onMounted(() => {
             >
               Delete
             </button>
-          </div>
-        </div>
-      </div>
+          </div> -->
+        <!-- </div> -->
+      <!-- </div> -->
 
-      <p
+      <!-- <p
         v-if="filteredProducts.length === 0"
         class="empty"
       >
         No products found.
-      </p>
-    </section>
+      </p> -->
+    <!-- </section>
 
     
     <section class="section">
@@ -2593,10 +2595,10 @@ onMounted(() => {
           Add Product
         </button>
       </form>
-    </section>
+    </section> -->
 
     <!-- CART -->
-    <section class="section">
+    <!-- <section class="section">
       <h2> Shopping Cart</h2>
 
       <div
@@ -2639,10 +2641,10 @@ onMounted(() => {
           Remove
         </button>
       </div>
-    </section>
+    </section> -->
 
     
-    <section class="section checkout">
+    <!-- <section class="section checkout">
       <h2> Checkout Summary</h2>
 
       <input
@@ -2682,72 +2684,71 @@ onMounted(() => {
 
         <hr />
 
-        <div class="total">
+        <!-- <div class="total">
           <span>Grand Total</span>
           <strong>
             ${{ grandTotal.toFixed(2) }}
           </strong>
-        </div>
-      </div>
+        </div> -->
+      <!-- </div> -->
 
-      <button
+      <!-- <button
         class="checkout-btn"
         :disabled="cart.length === 0"
       >
         Checkout
-      </button>
-    </section>
+      </button> -->
+    <!-- </section> --> 
 
-  </div>
-</template>
+  <!-- </div> -->
+<!-- </template> -->
 
-<style scoped>
+<!-- <style scoped> -->
 * {
   box-sizing: border-box;
-}
+} 
 
-.app {
+ .app { 
   max-width: 1200px;
   margin: auto;
   padding: 30px;
   font-family: Arial, sans-serif;
   background: #caccd4;
   min-height: 100vh;
-}
+ }  
 
-.header {
+ .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
-}
+} 
 
-.header h1 {
+ .header h1 {
   margin: 0;
-}
+} 
 
-.cart-count {
+ .cart-count {
   background: #222;
   color: white;
   padding: 10px 18px;
   border-radius: 20px;
-}
+} 
 
-.section {
+ .section {
   background: white;
   padding: 25px;
   border-radius: 15px;
   margin-bottom: 25px;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-}
+} 
 
-.filters {
+ .filters {
   display: flex;
   gap: 10px;
   margin-bottom: 25px;
-}
-
-input,
+} 
+ input,
 select {
   padding: 11px;
   border: 1px solid #ddd;
@@ -2757,7 +2758,7 @@ select {
 
 .filters input {
   flex: 1;
-}
+} 
 
 .product-grid {
   display: grid;
@@ -2765,7 +2766,7 @@ select {
   gap: 20px;
 }
 
-.product-card {
+ .product-card {
   border: 1px solid #eee;
   padding: 20px;
   border-radius: 12px;
@@ -2931,4 +2932,324 @@ button:disabled {
   }
   
 }
-</style>
+<!-- </style>  -->
+
+
+
+
+
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+
+import Header from './components/Header.vue'
+import ProductCatalog from './components/ProductCatalog.vue'
+import AddProduct from './components/AddProduct.vue'
+import ShoppingCart from './components/ShoppingCart.vue'
+import CheckoutSummary from './components/CheckoutSummary.vue'
+import ProductCart from './components/ProductCart.vue'
+
+const products = ref([
+  {
+    id: 1,
+    name: 'iPhone 15',
+    category: 'Electronics',
+    price: 999,
+    stock: 10
+  },
+  {
+    id: 2,
+    name: 'Laptop HP',
+    category: 'Electronics',
+    price: 750,
+    stock: 5
+  },
+  {
+    id: 3,
+    name: 'Pizza',
+    category: 'Food',
+    price: 8,
+    stock: 20
+  },
+  {
+    id: 4,
+    name: 'Burger',
+    category: 'Food',
+    price: 5,
+    stock: 15
+  },
+  {
+    id: 5,
+    name: 'T-Shirt',
+    category: 'Fashion',
+    price: 15,
+    stock: 30
+  }
+])
+
+const cart = ref([])
+
+const searchQuery = ref('')
+const selectedCategory = ref('All')
+const sortBy = ref('default')
+
+const promoCode = ref('')
+
+const newProduct = ref({
+  name: '',
+  category: 'Electronics',
+  price: '',
+  stock: ''
+})
+
+const filteredProducts = computed(() => {
+  let result = products.value.filter(product => {
+    const search = product.name
+      .toLowerCase()
+      .includes(searchQuery.value.toLowerCase())
+
+    const category =
+      selectedCategory.value === 'All' ||
+      product.category === selectedCategory.value
+
+    return search && category
+  })
+
+  if (sortBy.value === 'low-high') {
+    result.sort((a, b) => a.price - b.price)
+  }
+
+  if (sortBy.value === 'high-low') {
+    result.sort((a, b) => b.price - a.price)
+  }
+
+  return result
+})
+
+function addProduct() {
+  if (!newProduct.value.name.trim()) {
+    alert('Please enter product name')
+    return
+  }
+
+  if (newProduct.value.price <= 0) {
+    alert('Price must be greater than 0')
+    return
+  }
+
+  if (
+    newProduct.value.stock < 0 ||
+    newProduct.value.stock === ''
+  ) {
+    alert('Stock cannot be negative')
+    return
+  }
+
+  products.value.push({
+    id: Date.now(),
+    name: newProduct.value.name,
+    category: newProduct.value.category,
+    price: Number(newProduct.value.price),
+    stock: Number(newProduct.value.stock)
+  })
+
+  newProduct.value = {
+    name: '',
+    category: 'Electronics',
+    price: '',
+    stock: ''
+  }
+}
+
+function deleteProduct(id) {
+  const inCart = cart.value.find(item => item.id === id)
+
+  if (inCart) {
+    alert('Cannot delete product in cart')
+    return
+  }
+
+  products.value = products.value.filter(
+    product => product.id !== id
+  )
+}
+
+function addToCart(product) {
+  if (product.stock <= 0) {
+    alert('Out of stock!')
+    return
+  }
+
+  const item = cart.value.find(
+    item => item.id === product.id
+  )
+
+  if (item) {
+    item.quantity++
+  } else {
+    cart.value.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1
+    })
+  }
+
+  product.stock--
+}
+
+function increaseQuantity(item) {
+  const product = products.value.find(
+    product => product.id === item.id
+  )
+
+  if (!product) return
+
+  if (product.stock <= 0) {
+    alert('No more stock!')
+    return
+  }
+
+  item.quantity++
+  product.stock--
+}
+
+function decreaseQuantity(item) {
+  const product = products.value.find(
+    product => product.id === item.id
+  )
+
+  if (item.quantity > 1) {
+    item.quantity--
+
+    if (product) {
+      product.stock++
+    }
+  } else {
+    removeFromCart(item.id)
+  }
+}
+
+function removeFromCart(id) {
+  const item = cart.value.find(
+    item => item.id === id
+  )
+
+  if (!item) return
+
+  const product = products.value.find(
+    product => product.id === id
+  )
+
+  if (product) {
+    product.stock += item.quantity
+  }
+
+  cart.value = cart.value.filter(
+    item => item.id !== id
+  )
+}
+
+const subtotal = computed(() => {
+  return cart.value.reduce(
+    (total, item) =>
+      total + item.price * item.quantity,
+    0
+  )
+})
+
+const discountRate = computed(() => {
+  return promoCode.value.toUpperCase() === 'SAVE20'
+    ? 0.2
+    : 0
+})
+
+const discount = computed(() => {
+  return subtotal.value * discountRate.value
+})
+
+const grandTotal = computed(() => {
+  return subtotal.value - discount.value
+})
+
+const cartCount = computed(() => {
+  return cart.value.reduce(
+    (total, item) => total + item.quantity,
+    0
+  )
+})
+
+watch(
+  products,
+  value => {
+    localStorage.setItem(
+      'products',
+      JSON.stringify(value)
+    )
+  },
+  { deep: true }
+)
+
+watch(
+  cart,
+  value => {
+    localStorage.setItem(
+      'cart',
+      JSON.stringify(value)
+    )
+  },
+  { deep: true }
+)
+
+onMounted(() => {
+  const savedProducts =
+    localStorage.getItem('products')
+
+  const savedCart =
+    localStorage.getItem('cart')
+
+  if (savedProducts) {
+    products.value = JSON.parse(savedProducts)
+  }
+
+  if (savedCart) {
+    cart.value = JSON.parse(savedCart)
+  }
+})
+</script>
+
+<template>
+  <div class="app">
+
+    <Header :cart-count="cartCount" />
+
+    <ProductCatalog
+      :products="filteredProducts"
+      @add-to-cart="addToCart"
+      @delete-product="deleteProduct"
+    />
+
+    <AddProduct
+      :new-product="newProduct"
+      @add-product="addProduct"
+    />
+
+    <ShoppingCart
+      :cart="cart"
+      @increase="increaseQuantity"
+      @decrease="decreaseQuantity"
+      @remove="removeFromCart"
+    />
+
+    <CheckoutSummary
+      :subtotal="subtotal"
+      :discount-rate="discountRate"
+      :discount="discount"
+      :grand-total="grandTotal"
+      :promo-code="promoCode"
+      :cart-length="cart.length"
+      @update-promo="promoCode = $event"
+    />
+
+  </div>
+</template>
+```
